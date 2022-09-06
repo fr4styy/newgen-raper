@@ -1,11 +1,12 @@
 local t1 = tick()
 local IsAltPresent = false
 local Players = game:GetService("Players")
+local IsKicked = false
 
 local function Teleport()
     task.spawn(function()
     local Teleported = false
-    repeat task.wait() until #Players:GetPlayers() < 3 or math.abs(tick() - t1) > 75 or IsAltPresent == true
+    repeat task.wait() until #Players:GetPlayers() < 3 or math.abs(tick() - t1) > 75 or IsAltPresent == true or IsKicked = true
     while not Teleported do
         print("attempting to teleport")
         local x = {}
@@ -16,6 +17,7 @@ local function Teleport()
         end
         if #x > 0 then
             game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, x[math.random(1, #x)])
+         end)
         end
         local success, err = pcall(function()
             game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, x[math.random(1, #x)])
@@ -58,6 +60,12 @@ local PositionToPlace = BlockPosition - OldPlatePosition + GetPlatePosition()
 local BlockToPlace = "Firepit" -- change this to whatever block you want, firepit is just the laggiest
 local HeightToPlace = -20 -- hides the lagbomb so you can't get reported, change if you want for debugging/visibility
 
+Players.PlayerRemoving:Connect(function(plr)
+    if plr == Players.LocalPlayer then
+        IsKicked = true
+       Teleport()
+    end
+end)
 
 for i = 1, 5000 do 
     task.spawn(function()
