@@ -3,6 +3,7 @@ local IsAltPresent = false
 local Players = game:GetService("Players")
 
 local function Teleport()
+    task.spawn(function()
     local Teleported = false
     repeat task.wait() until #Players:GetPlayers() < 2 or math.abs(tick() - t1) > 75 or IsAltPresent == true
     while not Teleported do
@@ -26,6 +27,7 @@ local function Teleport()
         end
     end
     task.wait(2)
+    end)
 end
 
 for _, player in pairs(Players:GetPlayers()) do
@@ -56,14 +58,15 @@ local PositionToPlace = BlockPosition - OldPlatePosition + GetPlatePosition()
 local BlockToPlace = "Firepit" -- change this to whatever block you want, firepit is just the laggiest
 local HeightToPlace = -20 -- hides the lagbomb so you can't get reported, change if you want for debugging/visibility
 
+
 for i = 1, 5000 do 
     task.spawn(function()
         while true do wait()
-            for i = 1, 10 do
+            for i = 1, 6 do
             game:GetService("ReplicatedStorage").Send:InvokeServer("Place", BlockToPlace, CFrame.new(CFrame.new(PositionToPlace).x, HeightToPlace, CFrame.new(PositionToPlace).z))
             end
         end
     end)
 end
 
-Teleport()
+Teleport() 
