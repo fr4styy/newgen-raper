@@ -5,7 +5,7 @@ local Players = game:GetService("Players")
 local function Teleport()
     task.spawn(function()
     local Teleported = false
-    repeat task.wait() until #Players:GetPlayers() <= 3 or math.abs(tick() - t1) > 75 or IsAltPresent == true
+    repeat task.wait() until #Players:GetPlayers() < 3 or math.abs(tick() - t1) > 75 or IsAltPresent == true
     while not Teleported do
         print("attempting to teleport")
         local x = {}
