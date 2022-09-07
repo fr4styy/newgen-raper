@@ -56,14 +56,14 @@ getgenv().Rejoin = game:GetService("CoreGui").RobloxPromptGui.promptOverlay.Chil
     end
 end)
 
-for _, player in pairs(Players:GetPlayers()) do
+for _, player in pairs(game.Players:GetPlayers()) do
     for _, alt in pairs(Alts) do 
-        if player.Name:lower() == alt:lower() then 
-            -- will keep teleporting if it recognizes ourself
-        elseif player.Name:lower() == alt:lower() then -- we don't want all of the alts to pool up in a server
+        if game.Players.LocalPlayer.Name == alt then -- will insta teleport if this is not set in place
+
+        elseif player.Name == tostring(alt)  then -- we don't want all of the alts to pool up in a server
+            print("alt found: " .. alt .. ". attempting teleport")
             IsAltPresent = true
             Teleport()
-            break
         end
     end
 end
