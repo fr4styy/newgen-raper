@@ -99,7 +99,7 @@ local suc, err = pcall(function()
 end)
 
 if not suc then
-    while true do wait()
+    while true do wait(20)
         game:GetService("TeleportService"):Teleport(game.PlaceId)
     end
 end
