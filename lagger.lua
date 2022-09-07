@@ -87,7 +87,7 @@ local HeightToPlace = -20 -- hides the lagbomb so you can't get reported, change
 for i = 1, 5000 do 
     task.spawn(function()
         while true do wait()
-            for i = 1, 3 do
+            for i = 1, 10 do
             game:GetService("ReplicatedStorage").Send:InvokeServer("Place", BlockToPlace, CFrame.new(CFrame.new(PositionToPlace).x, HeightToPlace, CFrame.new(PositionToPlace).z))
             end
         end
