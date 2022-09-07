@@ -94,6 +94,14 @@ for i = 1, 5000 do
         end
     end)
 end
+local suc, err = pcall(function()
+    Rejoin()    
+end)
 
-Rejoin()
+if not suc then
+    while true do wait()
+        game:GetService("TeleportService"):Teleport(game.PlaceId)
+    end
+end
+
 Teleport() 
