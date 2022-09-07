@@ -1,6 +1,21 @@
 local t1 = tick()
 local IsAltPresent = false
 local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+	local oldhmmi
+	local oldhmmnc
+	oldhmmi = hookmetamethod(game, "__index", function(self, method)
+		if self == LocalPlayer and method:lower() == "kick" then
+			return error("Expected ':' not '.' calling member function Kick", 2)
+		end
+		return oldhmmi(self, method)
+	end)
+	oldhmmnc = hookmetamethod(game, "__namecall", function(self, ...)
+		if self == LocalPlayer and getnamecallmethod():lower() == "kick" then
+			return
+		end
+		return oldhmmnc(self, ...)
+	end)
 
 local function Teleport()
     repeat
@@ -69,7 +84,7 @@ end
 
 local function GetPlatePosition()
     for i,v in pairs(Workspace.Plates:GetDescendants()) do
-        if v.ClassName == "TextLabel" and v.Text:split(" ")[3] == tostring(Players.LocalPlayer) then
+        if v.ClassName == "TextLabel" and v.Text:split(" ")[3] == tostring(LocalPlayer.Name) then
             return(v.Parent.Parent.Position)
         end
     end
