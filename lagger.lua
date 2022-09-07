@@ -2,20 +2,6 @@ local t1 = tick()
 local IsAltPresent = false
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
-	local oldhmmi
-	local oldhmmnc
-	oldhmmi = hookmetamethod(game, "__index", function(self, method)
-		if self == LocalPlayer and method:lower() == "kick" then
-			return error("Expected ':' not '.' calling member function Kick", 2)
-		end
-		return oldhmmi(self, method)
-	end)
-	oldhmmnc = hookmetamethod(game, "__namecall", function(self, ...)
-		if self == LocalPlayer and getnamecallmethod():lower() == "kick" then
-			return
-		end
-		return oldhmmnc(self, ...)
-	end)
 
 local function Teleport()
     repeat
@@ -102,7 +88,7 @@ local HeightToPlace = -20 -- hides the lagbomb so you can't get reported, change
 for i = 1, 5000 do 
     task.spawn(function()
         while true do wait()
-            for i = 1, 10 do
+            for i = 1, 3 do
             game:GetService("ReplicatedStorage").Send:InvokeServer("Place", BlockToPlace, CFrame.new(CFrame.new(PositionToPlace).x, HeightToPlace, CFrame.new(PositionToPlace).z))
             end
         end
