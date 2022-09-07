@@ -1,36 +1,59 @@
 local t1 = tick()
 local IsAltPresent = false
 local Players = game:GetService("Players")
-local IsKicked = false
 
 local function Teleport()
-    task.spawn(function()
-    local Teleported = false
-    repeat task.wait() until #Players:GetPlayers() < 3 or math.abs(tick() - t1) > 75 or IsAltPresent == true or IsKicked == true
-    while not Teleported do
+    repeat
+        task.wait()
+    until #Players:GetPlayers() < 3 or math.abs(tick() - t1) > 75 or IsAltPresent == true 
+    teleported = false
+        while not teleported do
         print("attempting to teleport")
-        local x = {}
+        x = {}
         for _, v in ipairs(game:GetService("HttpService"):JSONDecode(game:HttpGetAsync("https://games.roblox.com/v1/games/" .. game.PlaceId .. "/servers/Public?sortOrder=Asc&limit=100")).data) do
             if type(v) == "table" and v.maxPlayers > v.playing and v.id ~= game.JobId then
                 x[#x + 1] = v.id
             end
         end
         if #x > 0 then
-            game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, x[math.random(1, #x)])
-         end)
+            local success, err = pcall(function()
+                game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, x[math.random(1, #x)])
+            end)
+            if not success then
+                warn(err)
+            else
+                teleported = true
+            end
         end
-        local success, err = pcall(function()
-            game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, x[math.random(1, #x)])
-        end)
-        if not success then
-            warn(err)
-        else
-            teleported = true
+        task.wait(2)
+        end
+end
+
+getgenv().Rejoin = game:GetService("CoreGui").RobloxPromptGui.promptOverlay.ChildAdded:Connect(function(child) -- calling function will not work here 
+    if child.Name == 'ErrorPrompt' and child:FindFirstChild('MessageArea') and child.MessageArea:FindFirstChild("ErrorFrame") then
+        teleported = false
+        while not teleported do
+        print("attempting to teleport")
+        x = {}
+        for _, v in ipairs(game:GetService("HttpService"):JSONDecode(game:HttpGetAsync("https://games.roblox.com/v1/games/" .. game.PlaceId .. "/servers/Public?sortOrder=Asc&limit=100")).data) do
+            if type(v) == "table" and v.maxPlayers > v.playing and v.id ~= game.JobId then
+                x[#x + 1] = v.id
+            end
+        end
+        if #x > 0 then
+            local success, err = pcall(function()
+                game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, x[math.random(1, #x)])
+            end)
+            if not success then
+                warn(err)
+            else
+                teleported = true
+            end
+        end
+        task.wait(2)
         end
     end
-    task.wait(2)
-    end)
-end
+end)
 
 for _, player in pairs(Players:GetPlayers()) do
     for _, alt in pairs(Alts) do 
@@ -60,12 +83,6 @@ local PositionToPlace = BlockPosition - OldPlatePosition + GetPlatePosition()
 local BlockToPlace = "Firepit" -- change this to whatever block you want, firepit is just the laggiest
 local HeightToPlace = -20 -- hides the lagbomb so you can't get reported, change if you want for debugging/visibility
 
-Players.PlayerRemoving:Connect(function(plr)
-    if plr == Players.LocalPlayer then
-        IsKicked = true
-       Teleport()
-    end
-end)
 
 for i = 1, 5000 do 
     task.spawn(function()
@@ -77,4 +94,5 @@ for i = 1, 5000 do
     end)
 end
 
+Rejoin()
 Teleport() 
